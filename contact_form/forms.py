@@ -140,12 +140,12 @@ class ContactForm(forms.Form):
     
     name = forms.CharField(max_length=100,
                            widget=forms.TextInput(attrs=attrs_dict),
-                           label=_(u'Your name'))
+                           label=_('Your name'))
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=200)),
-                             label=_(u'Your email address'))
+                             label=_('Your email address'))
     body = forms.CharField(widget=forms.Textarea(attrs=attrs_dict),
-                              label=_(u'Your message'))
+                              label=_('Your message'))
     
     from_email = settings.DEFAULT_FROM_EMAIL
     
@@ -256,5 +256,5 @@ class AkismetContactForm(ContactForm):
                                  'user_ip': self.request.META.get('REMOTE_ADDR', ''),
                                  'user_agent': self.request.META.get('HTTP_USER_AGENT', '') }
                 if akismet_api.comment_check(smart_str(self.cleaned_data['body']), data=akismet_data, build_data=True):
-                    raise forms.ValidationError(_(u"Akismet thinks this message is spam"))
+                    raise forms.ValidationError(_("Akismet thinks this message is spam"))
         return self.cleaned_data['body']
