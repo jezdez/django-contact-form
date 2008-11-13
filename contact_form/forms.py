@@ -11,6 +11,7 @@ from django.core.mail import send_mail
 from django.template import loader
 from django.template import RequestContext
 from django.contrib.sites.models import Site
+from django.utils.translation import ugettext_lazy as _
 
 
 # I put this on all required fields, because it's easier to pick up
@@ -139,12 +140,12 @@ class ContactForm(forms.Form):
     
     name = forms.CharField(max_length=100,
                            widget=forms.TextInput(attrs=attrs_dict),
-                           label=u'Your name')
+                           label=_(u'Your name'))
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=200)),
-                             label=u'Your email address')
+                             label=_(u'Your email address'))
     body = forms.CharField(widget=forms.Textarea(attrs=attrs_dict),
-                              label=u'Your message')
+                              label=_(u'Your message'))
     
     from_email = settings.DEFAULT_FROM_EMAIL
     
@@ -255,5 +256,5 @@ class AkismetContactForm(ContactForm):
                                  'user_ip': self.request.META.get('REMOTE_ADDR', ''),
                                  'user_agent': self.request.META.get('HTTP_USER_AGENT', '') }
                 if akismet_api.comment_check(smart_str(self.cleaned_data['body']), data=akismet_data, build_data=True):
-                    raise forms.ValidationError(u"Akismet thinks this message is spam")
+                    raise forms.ValidationError(_(u"Akismet thinks this message is spam"))
         return self.cleaned_data['body']
