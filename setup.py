@@ -14,4 +14,5 @@ setup(name='django-contact-form',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',
                    'Topic :: Utilities'],
+      package_data={'contact_form': ['locale/*/LC_MESSAGES/*']},
       )
