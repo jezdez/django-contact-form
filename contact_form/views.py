@@ -3,9 +3,8 @@ View which can render and send email from a contact form.
 
 """
 
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from contact_form.forms import ContactForm
@@ -70,14 +69,15 @@ def contact_form(request, form_class=ContactForm,
     # perform the reverse lookup we need access to contact_form/urls.py,
     # but contact_form/urls.py in turn imports from this module.
     #
-    
-    if success_url is None:
-        success_url = reverse('contact_form_sent')
     if request.method == 'POST':
         form = form_class(data=request.POST, files=request.FILES, request=request)
         if form.is_valid():
             form.save(fail_silently=fail_silently)
-            return HttpResponseRedirect(success_url)
+            if success_url is None:
+                to, args, kwargs = form.get_success_redirect()
+                return redirect(to, *args, **kwargs)
+            else:
+                return redirect(success_url)
     else:
         form = form_class(request=request)
 

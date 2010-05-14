@@ -86,6 +86,9 @@ class ContactBaseForm(forms.Form):
       determine which template to use for rendering the
       message. Default is ``contact_form/contact_form.txt``.
 
+    * ``get_success_redirect`` -- used to construct the URL that
+      is redirected to after a successful run.
+
     Internally, the base implementation ``_get_message_dict`` method
     collects ``from_email``, ``message``, ``recipient_list`` and
     ``subject`` into a dictionary, which the ``save`` method then
@@ -224,6 +227,12 @@ class ContactBaseForm(forms.Form):
         if Site._meta.installed:
             return Site.objects.get_current()
         return RequestSite(self.request)
+    
+    def get_success_redirect(self):
+        """
+        Returns the URL to redirect to after successful run.
+        """
+        return ('contact_form_sent', (), {})
     
     def save(self, fail_silently=False):
         """
