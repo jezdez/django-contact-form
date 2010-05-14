@@ -139,7 +139,7 @@ class ContactBaseForm(forms.Form):
     def __init__(self, data=None, files=None, request=None, *args, **kwargs):
         if request is None:
             raise TypeError("Keyword argument 'request' must be supplied")
-        super(ContactForm, self).__init__(data=data, files=files, *args, **kwargs)
+        super(ContactBaseForm, self).__init__(data=data, files=files, *args, **kwargs)
         self.request = request
     
     from_email = settings.DEFAULT_FROM_EMAIL
