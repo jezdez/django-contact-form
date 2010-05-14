@@ -8,8 +8,7 @@ a web interface, and a subclass demonstrating useful functionality.
 from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
-from django.template import loader
-from django.template import RequestContext
+from django.template import loader, RequestContext
 from django.contrib.sites.models import Site, RequestSite
 from django.utils.translation import ugettext_lazy as _
 
@@ -105,7 +104,7 @@ class ContactBaseForm(forms.Form):
     Much useful functionality can be achieved in subclasses without
     having to override much of the above; adding additional validation
     methods works the same as any other form, and typically only a few
-    items -- ``recipient_list`` and ``subject_line``, for example,
+    items -- ``recipient_list`` and ``subject``, for example,
     need to be overridden to achieve customized behavior.
 
 
