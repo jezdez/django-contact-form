@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
 from django.template import RequestContext
-from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site, RequestSite
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -189,7 +189,7 @@ class ContactBaseForm(forms.Form):
             raise ValueError("Cannot generate Context from invalid contact form")
         return RequestContext(self.request,
                               dict(self.cleaned_data,
-                                   site=Site.objects.get_current()))
+                                   site=self.get_current_site()))
     
     def get_message_dict(self):
         """
@@ -215,6 +215,15 @@ class ContactBaseForm(forms.Form):
             attr = getattr(self, message_part)
             message_dict[message_part] = callable(attr) and attr() or attr
         return message_dict
+    
+    def get_current_site(self):
+        """
+        Checks if the sites app is installed and returns a ``RequestSite``
+        instance if not.
+        """
+        if Site._meta.installed:
+            return Site.objects.get_current()
+        return RequestSite(self.request)
     
     def save(self, fail_silently=False):
         """
@@ -247,6 +256,8 @@ class AkismetContactForm(ContactForm):
     Requires the setting ``AKISMET_API_KEY``, which should be a valid
     Akismet API key.
     
+    Requires a ``request`` object being passed to the form.
+
     """
     def clean_body(self):
         """
@@ -257,7 +268,7 @@ class AkismetContactForm(ContactForm):
             from akismet import Akismet
             from django.utils.encoding import smart_str
             akismet_api = Akismet(key=settings.AKISMET_API_KEY,
-                                  blog_url='http://%s/' % Site.objects.get_current().domain)
+                                  blog_url='http://%s/' % self.get_current_site().domain)
             if akismet_api.verify_key():
                 akismet_data = { 'comment_type': 'comment',
                                  'referer': self.request.META.get('HTTP_REFERER', ''),
