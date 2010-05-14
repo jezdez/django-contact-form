@@ -14,6 +14,8 @@ from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 
 
+__all__ = ('ContactBaseForm', 'ContactForm', 'AkismetContactForm')
+
 # I put this on all required fields, because it's easier to pick up
 # on them with CSS or JavaScript if they have a class of "required"
 # in the HTML. Your mileage may vary.
