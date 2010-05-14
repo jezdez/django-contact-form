@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 attrs_dict = { 'class': 'required' }
 
 
-class ContactForm(forms.Form):
+class ContactBaseForm(forms.Form):
     """
     Base contact form class from which all contact form classes should
     inherit.
@@ -138,15 +138,6 @@ class ContactForm(forms.Form):
         super(ContactForm, self).__init__(data=data, files=files, *args, **kwargs)
         self.request = request
     
-    name = forms.CharField(max_length=100,
-                           widget=forms.TextInput(attrs=attrs_dict),
-                           label=_('Your name'))
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
-                                                               maxlength=200)),
-                             label=_('Your email address'))
-    body = forms.CharField(widget=forms.Textarea(attrs=attrs_dict),
-                              label=_('Your message'))
-    
     from_email = settings.DEFAULT_FROM_EMAIL
     
     recipient_list = [mail_tuple[1] for mail_tuple in settings.MANAGERS]
@@ -229,6 +220,21 @@ class ContactForm(forms.Form):
         
         """
         send_mail(fail_silently=fail_silently, **self.get_message_dict())
+
+
+class ContactForm(ContactBaseForm):
+    """
+    Contact form which requires users to enter name and email adress,
+    as well a message body.
+    """
+    name = forms.CharField(max_length=100,
+                           widget=forms.TextInput(attrs=attrs_dict),
+                           label=_('Your name'))
+    email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
+                                                               maxlength=200)),
+                             label=_('Your email address'))
+    body = forms.CharField(widget=forms.Textarea(attrs=attrs_dict),
+                              label=_('Your message'))
 
 
 class AkismetContactForm(ContactForm):
