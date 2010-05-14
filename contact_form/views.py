@@ -2,8 +2,6 @@
 View which can render and send email from a contact form.
 
 """
-
-from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
